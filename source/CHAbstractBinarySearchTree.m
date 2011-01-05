@@ -174,8 +174,10 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 
 - (void) dealloc {
 	[searchTree release];
-	free(stack);
-	free(queue);
+	CHBinaryTreeStack_FREE(stack);
+//	free(stack);
+	CHBinaryTreeQueue_FREE(queue);
+//	free(queue);
 	[super dealloc];
 }
 
@@ -197,7 +199,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 	
 	switch (traversalOrder) {
 		case CHTraverseAscending: {
-			if (stackSize == 0 && current == sentinelNode) {
+			if (stack->stackSize == 0 && current == sentinelNode) {
 				goto collectionExhausted;
 			}
 			while (current != sentinelNode) {
@@ -213,7 +215,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 		}
 			
 		case CHTraverseDescending: {
-			if (stackSize == 0 && current == sentinelNode) {
+			if (stack->stackSize == 0 && current == sentinelNode) {
 				goto collectionExhausted;
 			}
 			while (current != sentinelNode) {
@@ -242,7 +244,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 			
 		case CHTraversePostOrder: {
 			// This algorithm from: http://www.johny.ca/blog/archives/05/03/04/
-			if (stackSize == 0 && current == sentinelNode) {
+			if (stack->stackSize == 0 && current == sentinelNode) {
 				goto collectionExhausted;
 			}
 			while (1) {
@@ -250,7 +252,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 					CHBinaryTreeStack_PUSH(current);
 					current = current->left;
 				}
-				NSAssert(stackSize > 0, @"Stack should never be empty!");
+				NSAssert(stack->stackSize > 0, @"Stack should never be empty!");
 				// A null entry indicates that we've traversed the left subtree
 				if (CHBinaryTreeStack_TOP != NULL) {
 					current = CHBinaryTreeStack_TOP->right;
@@ -379,15 +381,16 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
 	}
 	else {
 		current = (CHBinaryTreeNode*) state->state;
-		stack = (CHBinaryTreeNode**) state->extra[0];
-		stackCapacity = (NSUInteger) state->extra[1];
-		stackSize = (NSUInteger) state->extra[2];
+//		stack = (CHBinaryTreeNode**) state->extra[0];
+		stack = (CHBinaryTreeStack *) state->extra[0];
+//		stackCapacity = (NSUInteger) state->extra[1];
+//		stackSize = (NSUInteger) state->extra[2];
 	}
 	NSAssert(current != nil, @"Illegal state, current should never be nil!");
 	
 	// Accumulate objects from the tree until we reach all nodes or the maximum
 	NSUInteger batchCount = 0;
-	while ( (current != sentinel || stackSize > 0) && batchCount < len) {
+	while ( (current != sentinel || stack->stackSize > 0) && batchCount < len) {
 		while (current != sentinel) {
 			CHBinaryTreeStack_PUSH(current);
 			current = current->left;
@@ -399,15 +402,15 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
 		batchCount++;
 	}
 	
-	if (current == sentinel && stackSize == 0) {
+	if (current == sentinel && stack->stackSize == 0) {
 		CHBinaryTreeStack_FREE(stack);
 		state->state = 1; // used as a termination flag
 	}
 	else {
 		state->state    = (unsigned long) current;
 		state->extra[0] = (unsigned long) stack;
-		state->extra[1] = (unsigned long) stackCapacity;
-		state->extra[2] = (unsigned long) stackSize;
+//		state->extra[1] = (unsigned long) stackCapacity;
+//		state->extra[2] = (unsigned long) stackSize;
 	}
 	return batchCount;
 }
