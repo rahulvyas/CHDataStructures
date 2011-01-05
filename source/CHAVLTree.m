@@ -183,7 +183,7 @@ done:
 	
 	// Trace back up the search path, rebalancing as we go until we're done
 	BOOL done = NO;
-	while (!done && stackSize > 0) {
+	while (!done && stack->stackSize > 0) {
 		// Update the balance factor
 		if (isRightChild)
 			parent->balance--;

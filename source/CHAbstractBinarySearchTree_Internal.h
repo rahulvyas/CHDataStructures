@@ -9,6 +9,7 @@
  */
 
 #import "CHAbstractBinarySearchTree.h"
+#import "CHBinaryTreeStack.h"
 
 /**
  @file CHAbstractBinarySearchTree_Internal.h
@@ -33,35 +34,44 @@ HIDDEN OBJC_EXPORT size_t kCHBinaryTreeNodeSize;
 #pragma mark Stack macros
 
 #define CHBinaryTreeStack_DECLARE() \
-	__strong CHBinaryTreeNode** stack; \
-	NSUInteger stackCapacity, stackSize
+	__strong CHBinaryTreeStack * stack
+//	__strong CHBinaryTreeNode** stack; \
+//	NSUInteger stackCapacity, stackSize
 
 #define CHBinaryTreeStack_INIT() { \
-	stackCapacity = 32; \
-	stack = NSAllocateCollectable(kCHBinaryTreeNodeSize*stackCapacity, NSScannedOption); \
-	stackSize = 0; \
+	stack = [[CHBinaryTreeStack alloc] init]; \
 }
+//	stackCapacity = 32; \
+//	stack = NSAllocateCollectable(kCHBinaryTreeNodeSize*stackCapacity, NSScannedOption); \
+//	stackSize = 0; \
+//}
 
 #define CHBinaryTreeStack_FREE(stack) { \
-	if (stack != NULL && kCHGarbageCollectionNotEnabled) \
-		free(stack); \
-	stack = NULL; \
+	[stack release], stack = nil; \
 }
+//	if (stack != NULL && kCHGarbageCollectionNotEnabled) \
+//		free(stack); \
+//	stack = NULL; \
+//}
 
 // Since this stack starts at 0 and goes to N-1, resizing is pretty simple.
 #define CHBinaryTreeStack_PUSH(node) { \
-	stack[stackSize++] = node; \
-	if (stackSize >= stackCapacity) { \
-		stackCapacity *= 2; \
-		stack = NSReallocateCollectable(stack, kCHPointerSize*stackCapacity, NSScannedOption); \
-	} \
+	[stack push:node]; \
 }
+//	stack[stackSize++] = node; \
+//	if (stackSize >= stackCapacity) { \
+//		stackCapacity *= 2; \
+//		stack = NSReallocateCollectable(stack, kCHPointerSize*stackCapacity, NSScannedOption); \
+//	} \
+//}
 
 #define CHBinaryTreeStack_TOP \
-	((stackSize > 0) ? stack[stackSize-1] : NULL)
+	[stack top]
+//	((stackSize > 0) ? stack[stackSize-1] : NULL)
 
 #define CHBinaryTreeStack_POP() \
-	((stackSize > 0) ? stack[--stackSize] : NULL)
+	[stack pop]
+//	((stackSize > 0) ? stack[--stackSize] : NULL)
 
 
 #pragma mark Queue macros
