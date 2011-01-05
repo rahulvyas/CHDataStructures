@@ -46,13 +46,13 @@
 	++mutations;
 	
 	CHBinaryTreeNode *parent, *current = header;
-	CHBinaryTreeStack_DECLARE();
-	CHBinaryTreeStack_INIT();
+	CHBinaryTreeStack * stack;
+	stack = [[CHBinaryTreeStack alloc] init];
 	
 	sentinel->object = anObject; // Assure that we find a spot to insert
 	NSComparisonResult comparison;
 	while (comparison = [current->object compare:anObject]) {
-		CHBinaryTreeStack_PUSH(current);
+		[stack push:current];
 		current = current->link[comparison == NSOrderedAscending]; // R on YES
 	}
 	
@@ -70,7 +70,7 @@
 		current->level  = 1;
 		++count;
 		// Link from parent as the proper child, based on last comparison
-		parent = CHBinaryTreeStack_POP();
+		parent = [stack pop];
 		NSAssert(parent != nil, @"Illegal state, parent should never be nil!");
 		comparison = [parent->object compare:anObject];
 		parent->link[comparison == NSOrderedAscending] = current; // R if YES
@@ -85,10 +85,10 @@
 		parent->link[isRightChild] = current;
 		// Move to the next node up the path to the root
 		current = parent;
-		parent = CHBinaryTreeStack_POP();
+		parent = [stack pop];
 	}
 done:
-	CHBinaryTreeStack_FREE(stack);
+	[stack release];
 }
 
 - (void) removeObject:(id)anObject {
@@ -97,13 +97,13 @@ done:
 	++mutations;
 	
 	CHBinaryTreeNode *parent, *current = header;
-	CHBinaryTreeStack_DECLARE();
-	CHBinaryTreeStack_INIT();
+	CHBinaryTreeStack * stack;
+	stack = [[CHBinaryTreeStack alloc] init];
 	
 	sentinel->object = anObject; // Assure that we stop at a leaf if not found.
 	NSComparisonResult comparison;
 	while (comparison = [current->object compare:anObject]) {
-		CHBinaryTreeStack_PUSH(current);
+		[stack push:current];
 		current = current->link[comparison == NSOrderedAscending]; // R on YES
 	}
 	// Exit if the specified node was not found in the tree.
@@ -115,7 +115,7 @@ done:
 	--count;
 	if (current->left == sentinel || current->right == sentinel) {
 		// Single/zero child case -- replace node with non-nil child (if exists)
-		parent = CHBinaryTreeStack_TOP;
+		parent = [stack top];
 		NSAssert(parent != nil, @"Illegal state, parent should never be nil!");
 		parent->link[parent->right == current]
 			= current->link[current->left == sentinel];
@@ -123,13 +123,13 @@ done:
 			free(current);
 	} else {
 		// Two child case -- replace with minimum object in right subtree
-		CHBinaryTreeStack_PUSH(current); // Need to start here when rebalancing
+		[stack push:current]; // Need to start here when rebalancing
 		CHBinaryTreeNode *replacement = current->right;
 		while (replacement->left != sentinel) {
-			CHBinaryTreeStack_PUSH(replacement);
+			[stack push:replacement];
 			replacement = replacement->left;
 		}
-		parent = CHBinaryTreeStack_TOP;
+		parent = [stack top];
 		// Grab object from replacement node, steal its right child, deallocate
 		current->object = replacement->object;
 		parent->link[parent->right == replacement] = replacement->right;
@@ -142,8 +142,8 @@ done:
 	BOOL isRightChild;
 	while (current != NULL && stack->stackSize > 1) {
 		current = parent;
-		CHBinaryTreeStack_POP();
-		parent = CHBinaryTreeStack_TOP;
+		[stack pop];
+		parent = [stack top];
 		isRightChild = (parent->right == current);
 		
 		if (current->left->level < current->level-1 ||
@@ -161,7 +161,7 @@ done:
 		parent->link[isRightChild] = current;
 	}
 done:
-	CHBinaryTreeStack_FREE(stack);
+	[stack release];
 }
 
 - (NSString*) debugDescriptionForNode:(CHBinaryTreeNode*)node {
