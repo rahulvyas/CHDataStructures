@@ -13,8 +13,6 @@
 @interface CHBinaryTreeStack : NSObject {
 	__strong CHBinaryTreeNode** stack;
 	NSUInteger stackCapacity;
-	
-	@public
 	NSUInteger stackSize;
 }
 
@@ -23,5 +21,7 @@
 - (void) push:(CHBinaryTreeNode *)node;
 - (CHBinaryTreeNode *) pop;
 - (CHBinaryTreeNode *) top;
+
+- (NSUInteger) stackSize;
 
 @end

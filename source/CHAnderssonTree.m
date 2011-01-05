@@ -140,7 +140,7 @@ done:
 	// Walk back up the path and rebalance as we go
 	// Note that 'parent' always has the correct value coming into the loop
 	BOOL isRightChild;
-	while (current != NULL && stack->stackSize > 1) {
+	while (current != NULL && [stack stackSize] > 1) {
 		current = parent;
 		[stack pop];
 		parent = [stack top];
