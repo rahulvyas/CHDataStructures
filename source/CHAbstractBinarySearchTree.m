@@ -105,7 +105,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 @private
 	// Pointers and counters that are used for various tree traveral orderings.
 	CHBinaryTreeStack * stack;
-	CHBinaryTreeQueue_DECLARE();
+	CHBinaryTreeQueue * queue;
 	// These macros are defined in CHAbstractBinarySearchTree_Internal.h
 }
 
@@ -155,8 +155,8 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 	traversalOrder = order;
 	searchTree = (root != sentinel) ? [tree retain] : nil;
 	if (traversalOrder == CHTraverseLevelOrder) {
-		CHBinaryTreeQueue_INIT();
-		CHBinaryTreeQueue_ENQUEUE(root);
+		queue = [[CHBinaryTreeQueue alloc] init];
+		[queue enqueue:root];
 	} else {
 		stack = [[CHBinaryTreeStack alloc] init];
 		if (traversalOrder == CHTraversePreOrder) {
@@ -175,9 +175,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 - (void) dealloc {
 	[searchTree release];
 	[stack release];
-//	free(stack);
-	CHBinaryTreeQueue_FREE(queue);
-//	free(queue);
+	[queue release];
 	[super dealloc];
 }
 
@@ -267,15 +265,15 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 		}
 			
 		case CHTraverseLevelOrder: {
-			current = CHBinaryTreeQueue_FRONT;
-			CHBinaryTreeQueue_DEQUEUE();
+			current = [queue front];
+			[queue dequeue];
 			if (current == NULL) {
 				goto collectionExhausted;
 			}
 			if (current->left != sentinelNode)
-				CHBinaryTreeQueue_ENQUEUE(current->left);
+				[queue enqueue:current->left];
 			if (current->right != sentinelNode)
-				CHBinaryTreeQueue_ENQUEUE(current->right);
+				[queue enqueue:current->right];
 			return current->object;
 		}
 			
@@ -284,7 +282,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 				[searchTree release];
 				searchTree = nil;
 				[stack release];
-				CHBinaryTreeQueue_FREE(queue);
+				[queue release];
 			}
 	}
 	return nil;
