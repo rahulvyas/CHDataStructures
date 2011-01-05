@@ -37,16 +37,16 @@
 	++mutations;
 
 	CHBinaryTreeNode *parent, *current = header;
-	CHBinaryTreeStack_DECLARE();
-	CHBinaryTreeStack_INIT();
+	CHBinaryTreeStack * stack;
+	stack = [[CHBinaryTreeStack alloc] init];
 	
 	sentinel->object = anObject; // Assure that we find a spot to insert
 	NSComparisonResult comparison;
 	while (comparison = [current->object compare:anObject]) {
-		CHBinaryTreeStack_PUSH(current);
+		[stack push:current];
 		current = current->link[comparison == NSOrderedAscending]; // R on YES
 	}
-	parent = CHBinaryTreeStack_POP();
+	parent = [stack pop];
 	NSAssert(parent != nil, @"Illegal state, parent should never be nil!");
 	
 	[anObject retain]; // Must retain whether replacing value or adding new node
@@ -84,10 +84,10 @@
 		direction = (parent->left == current);
 		NSAssert(parent != nil, @"Illegal state, parent should never be nil!");
 		NSAssert(stack->stackSize > 0, @"Illegal state, stack should never be empty!");
-		singleRotation(parent, direction, CHBinaryTreeStack_TOP);
-		parent = CHBinaryTreeStack_POP();
+		singleRotation(parent, direction, [stack top]);
+		parent = [stack pop];
 	}
-	CHBinaryTreeStack_FREE(stack);
+	[stack release];
 }
 
 - (void) removeObject:(id)anObject {
