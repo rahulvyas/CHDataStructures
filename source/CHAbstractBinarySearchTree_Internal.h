@@ -31,43 +31,4 @@ HIDDEN CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject);
 HIDDEN OBJC_EXPORT size_t kCHBinaryTreeNodeSize;
 
 #import "CHBinaryTreeStack.h"
-
-#pragma mark Queue macros
-
-#define CHBinaryTreeQueue_DECLARE() \
-	__strong CHBinaryTreeNode** queue; \
-	NSUInteger queueCapacity, queueHead, queueTail
-
-#define CHBinaryTreeQueue_INIT() { \
-	queueCapacity = 128; \
-	queue = NSAllocateCollectable(kCHPointerSize*queueCapacity, NSScannedOption); \
-	queueHead = queueTail = 0; \
-}
-
-#define CHBinaryTreeQueue_FREE(queue) { \
-	if (queue != NULL && kCHGarbageCollectionNotEnabled) \
-		free(queue); \
-	queue = NULL; \
-}
-
-// This queue is a circular array, so resizing it takes a little extra care.
-#define CHBinaryTreeQueue_ENQUEUE(node) { \
-	queue[queueTail++] = node; \
-	queueTail %= queueCapacity; \
-	if (queueHead == queueTail) { \
-		queue = NSReallocateCollectable(queue, kCHPointerSize*queueCapacity*2, NSScannedOption); \
-		/* Copy wrapped-around portion to end of queue and move tail index */ \
-		objc_memmove_collectable(queue+queueCapacity, queue, kCHPointerSize*queueTail); \
-		/* Zeroing out shifted memory can simplify debugging queue problems */ \
-		/*bzero(queue, kCHPointerSize*queueTail);*/ \
-		queueTail += queueCapacity; \
-		queueCapacity *= 2; \
-	} \
-}
-
-// Due to limitations of using macros, you must always call FRONT, then DEQUEUE.
-#define CHBinaryTreeQueue_FRONT \
-	((queueHead != queueTail) ? queue[queueHead] : NULL)
-
-#define CHBinaryTreeQueue_DEQUEUE() \
-	if (queueHead != queueTail) queueHead = (queueHead + 1) % queueCapacity
+#import "CHBinaryTreeQueue.h"
