@@ -83,7 +83,7 @@
 		// Rotate current node up, push parent down to opposite subtree.
 		direction = (parent->left == current);
 		NSAssert(parent != nil, @"Illegal state, parent should never be nil!");
-		NSAssert(stack->stackSize > 0, @"Illegal state, stack should never be empty!");
+		NSAssert([stack stackSize] > 0, @"Illegal state, stack should never be empty!");
 		singleRotation(parent, direction, [stack top]);
 		parent = [stack pop];
 	}
