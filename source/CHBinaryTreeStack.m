@@ -56,4 +56,8 @@
 	return ((stackSize > 0) ? stack[stackSize-1] : NULL);
 }
 
+- (NSUInteger) stackSize {
+	return stackSize;
+}
+
 @end

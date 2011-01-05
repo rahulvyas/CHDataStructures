@@ -199,7 +199,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 	
 	switch (traversalOrder) {
 		case CHTraverseAscending: {
-			if (stack->stackSize == 0 && current == sentinelNode) {
+			if ([stack stackSize] == 0 && current == sentinelNode) {
 				goto collectionExhausted;
 			}
 			while (current != sentinelNode) {
@@ -215,7 +215,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 		}
 			
 		case CHTraverseDescending: {
-			if (stack->stackSize == 0 && current == sentinelNode) {
+			if ([stack stackSize] == 0 && current == sentinelNode) {
 				goto collectionExhausted;
 			}
 			while (current != sentinelNode) {
@@ -244,7 +244,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 			
 		case CHTraversePostOrder: {
 			// This algorithm from: http://www.johny.ca/blog/archives/05/03/04/
-			if (stack->stackSize == 0 && current == sentinelNode) {
+			if ([stack stackSize] == 0 && current == sentinelNode) {
 				goto collectionExhausted;
 			}
 			while (1) {
@@ -252,7 +252,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 					[stack push:current];
 					current = current->left;
 				}
-				NSAssert(stack->stackSize > 0, @"Stack should never be empty!");
+				NSAssert([stack stackSize] > 0, @"Stack should never be empty!");
 				// A null entry indicates that we've traversed the left subtree
 				if ([stack top] != NULL) {
 					current = [stack top]->right;
@@ -390,7 +390,7 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
 	
 	// Accumulate objects from the tree until we reach all nodes or the maximum
 	NSUInteger batchCount = 0;
-	while ( (current != sentinel || stack->stackSize > 0) && batchCount < len) {
+	while ( (current != sentinel || [stack stackSize] > 0) && batchCount < len) {
 		while (current != sentinel) {
 			[stack push:current];
 			current = current->left;
@@ -402,7 +402,7 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
 		batchCount++;
 	}
 	
-	if (current == sentinel && stack->stackSize == 0) {
+	if (current == sentinel && [stack stackSize] == 0) {
 		[stack release];
 		state->state = 1; // used as a termination flag
 	}
