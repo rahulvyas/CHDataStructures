@@ -104,7 +104,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 	
 @private
 	// Pointers and counters that are used for various tree traveral orderings.
-	CHBinaryTreeStack_DECLARE();
+	CHBinaryTreeStack * stack;
 	CHBinaryTreeQueue_DECLARE();
 	// These macros are defined in CHAbstractBinarySearchTree_Internal.h
 }
@@ -158,9 +158,9 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 		CHBinaryTreeQueue_INIT();
 		CHBinaryTreeQueue_ENQUEUE(root);
 	} else {
-		CHBinaryTreeStack_INIT();
+		stack = [[CHBinaryTreeStack alloc] init];
 		if (traversalOrder == CHTraversePreOrder) {
-			CHBinaryTreeStack_PUSH(root);
+			[stack push:root];
 		} else {
 			current = root;
 		}
@@ -174,7 +174,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 
 - (void) dealloc {
 	[searchTree release];
-	CHBinaryTreeStack_FREE(stack);
+	[stack release];
 //	free(stack);
 	CHBinaryTreeQueue_FREE(queue);
 //	free(queue);
@@ -203,11 +203,11 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 				goto collectionExhausted;
 			}
 			while (current != sentinelNode) {
-				CHBinaryTreeStack_PUSH(current);
+				[stack push:current];
 				current = current->left;
 				// TODO: How to not push/pop leaf nodes unnecessarily?
 			}
-			current = CHBinaryTreeStack_POP(); // Save top node for return value
+			current = [stack pop]; // Save top node for return value
 			NSAssert(current != nil, @"Illegal state, current should never be nil!");
 			id tempObject = current->object;
 			current = current->right;
@@ -219,11 +219,11 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 				goto collectionExhausted;
 			}
 			while (current != sentinelNode) {
-				CHBinaryTreeStack_PUSH(current);
+				[stack push:current];
 				current = current->right;
 				// TODO: How to not push/pop leaf nodes unnecessarily?
 			}
-			current = CHBinaryTreeStack_POP(); // Save top node for return value
+			current = [stack pop]; // Save top node for return value
 			NSAssert(current != nil, @"Illegal state, current should never be nil!");
 			id tempObject = current->object;
 			current = current->left;
@@ -231,14 +231,14 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 		}
 			
 		case CHTraversePreOrder: {
-			current = CHBinaryTreeStack_POP();
+			current = [stack pop];
 			if (current == NULL) {
 				goto collectionExhausted;
 			}
 			if (current->right != sentinelNode)
-				CHBinaryTreeStack_PUSH(current->right);
+				[stack push:current->right];
 			if (current->left != sentinelNode)
-				CHBinaryTreeStack_PUSH(current->left);
+				[stack push:current->left];
 			return current->object;
 		}
 			
@@ -249,19 +249,19 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 			}
 			while (1) {
 				while (current != sentinelNode) {
-					CHBinaryTreeStack_PUSH(current);
+					[stack push:current];
 					current = current->left;
 				}
 				NSAssert(stack->stackSize > 0, @"Stack should never be empty!");
 				// A null entry indicates that we've traversed the left subtree
-				if (CHBinaryTreeStack_TOP != NULL) {
-					current = CHBinaryTreeStack_TOP->right;
-					CHBinaryTreeStack_PUSH(NULL);
+				if ([stack top] != NULL) {
+					current = [stack top]->right;
+					[stack push:NULL];
 					// TODO: How to not push a null pad for leaf nodes?
 				}
 				else {
-					CHBinaryTreeStack_POP(); // ignore the null pad
-					return CHBinaryTreeStack_POP()->object;
+					[stack pop]; // ignore the null pad
+					return [stack pop]->object;
 				}				
 			}
 		}
@@ -283,7 +283,7 @@ static CHSearchTreeHeaderObject *headerObject = nil;
 			if (searchTree != nil) {
 				[searchTree release];
 				searchTree = nil;
-				CHBinaryTreeStack_FREE(stack);
+				[stack release];
 				CHBinaryTreeQueue_FREE(queue);
 			}
 	}
@@ -367,14 +367,14 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
                                      count:(NSUInteger)len
 {
 	CHBinaryTreeNode *current;
-	CHBinaryTreeStack_DECLARE();
+	CHBinaryTreeStack * stack;
 	
 	// For the first call, start at leftmost node, otherwise the last saved node
 	if (state->state == 0) {
 		state->itemsPtr = stackbuf;
 		state->mutationsPtr = &mutations;
 		current = header->right;
-		CHBinaryTreeStack_INIT();
+		stack = [[CHBinaryTreeStack alloc] init];
 	}
 	else if (state->state == 1) {
 		return 0;		
@@ -392,10 +392,10 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
 	NSUInteger batchCount = 0;
 	while ( (current != sentinel || stack->stackSize > 0) && batchCount < len) {
 		while (current != sentinel) {
-			CHBinaryTreeStack_PUSH(current);
+			[stack push:current];
 			current = current->left;
 		}
-		current = CHBinaryTreeStack_POP(); // Save top node for return value
+		current = [stack pop]; // Save top node for return value
 		NSAssert(current != nil, @"Illegal state, current should never be nil!");
 		stackbuf[batchCount] = current->object;
 		current = current->right;
@@ -403,7 +403,7 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
 	}
 	
 	if (current == sentinel && stack->stackSize == 0) {
-		CHBinaryTreeStack_FREE(stack);
+		[stack release];
 		state->state = 1; // used as a termination flag
 	}
 	else {
@@ -519,20 +519,20 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
 		// Only deal with memory management if garbage collection is NOT enabled.
 		// Remove each node from the tree and release the object it points to.
 		// Use pre-order (depth-first) traversal for simplicity and performance.
-		CHBinaryTreeStack_DECLARE();
-		CHBinaryTreeStack_INIT();
-		CHBinaryTreeStack_PUSH(header->right);
+		CHBinaryTreeStack * stack;
+		stack = [[CHBinaryTreeStack alloc] init];
+		[stack push:header->right];
 
 		CHBinaryTreeNode *current;
-		while (current = CHBinaryTreeStack_POP()) {
+		while (current = [stack pop]) {
 			if (current->right != sentinel)
-				CHBinaryTreeStack_PUSH(current->right);
+				[stack push:current->right];
 			if (current->left != sentinel)
-				CHBinaryTreeStack_PUSH(current->left);
+				[stack push:current->left];
 			[current->object release];
 			free(current);
 		}
-		free(stack); // declared in CHBinaryTreeStack_DECLARE() macro
+		free(stack); // declared in CHBinaryTreeStack * stack macro
 	}
 	header->right = sentinel; // With GC, this is sufficient to unroot the tree.
 	sentinel->object = nil; // Make sure we don't accidentally retain an object.
@@ -639,23 +639,23 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
 	NSMutableString *description = [NSMutableString stringWithFormat:
 	                                @"<%@: 0x%x> = {\n", [self class], self];
 	CHBinaryTreeNode *current;
-	CHBinaryTreeStack_DECLARE();
-	CHBinaryTreeStack_INIT();
+	CHBinaryTreeStack * stack;
+	stack = [[CHBinaryTreeStack alloc] init];
 	
 	sentinel->object = nil;
 	if (header->right != sentinel)
-		CHBinaryTreeStack_PUSH(header->right);	
-	while (current = CHBinaryTreeStack_POP()) {
+		[stack push:header->right];	
+	while (current = [stack pop]) {
 		if (current->right != sentinel)
-			CHBinaryTreeStack_PUSH(current->right);
+			[stack push:current->right];
 		if (current->left != sentinel)
-			CHBinaryTreeStack_PUSH(current->left);
+			[stack push:current->left];
 		// Append entry for the current node, including children
 		[description appendFormat:@"\t%@ -> \"%@\" and \"%@\"\n",
 		 [self debugDescriptionForNode:current],
 		 current->left->object, current->right->object];
 	}
-	CHBinaryTreeStack_FREE(stack);
+	[stack release];
 	[description appendString:@"}"];
 	return description;
 }
@@ -677,15 +677,15 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
 		sentinel->object = nil;
 		
 		CHBinaryTreeNode *current;
-		CHBinaryTreeStack_DECLARE();
-		CHBinaryTreeStack_INIT();
-		CHBinaryTreeStack_PUSH(header->right);
+		CHBinaryTreeStack * stack;
+		stack = [[CHBinaryTreeStack alloc] init];
+		[stack push:header->right];
 		// Uses a reverse pre-order traversal to make the DOT output look right.
-		while (current = CHBinaryTreeStack_POP()) {
+		while (current = [stack pop]) {
 			if (current->left != sentinel)
-				CHBinaryTreeStack_PUSH(current->left);
+				[stack push:current->left];
 			if (current->right != sentinel)
-				CHBinaryTreeStack_PUSH(current->right);
+				[stack push:current->right];
 			// Append entry for node with any subclass-specific customizations.
 			[graph appendString:[self dotGraphStringForNode:current]];
 			// Append entry for edges from current node to both its children.
@@ -698,7 +698,7 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
 			[graph appendFormat:@"  \"%@\" -> {%@;%@};\n",
 			                    current->object, leftChild, rightChild];
 		}
-		CHBinaryTreeStack_FREE(stack);
+		[stack release];
 		
 		// Create entry for each null leaf node (each nil is modeled separately)
 		for (NSUInteger i = 1; i <= sentinelCount; i++)
