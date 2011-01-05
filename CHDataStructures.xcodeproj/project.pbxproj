@@ -49,6 +49,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		5524419612D41A1D00F0AC26 /* CHBinaryTreeStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 5524419412D41A1D00F0AC26 /* CHBinaryTreeStack.h */; };
+		5524419712D41A1D00F0AC26 /* CHBinaryTreeStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 5524419512D41A1D00F0AC26 /* CHBinaryTreeStack.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		E40C4D02108D7A6A00A63A23 /* CHLockableSet.h in Headers */ = {isa = PBXBuildFile; fileRef = E40C4D00108D7A6A00A63A23 /* CHLockableSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E40C4D03108D7A6A00A63A23 /* CHLockableSet.m in Sources */ = {isa = PBXBuildFile; fileRef = E40C4D01108D7A6A00A63A23 /* CHLockableSet.m */; };
@@ -220,6 +222,8 @@
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C1667FE841158C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = resources/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5524419412D41A1D00F0AC26 /* CHBinaryTreeStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHBinaryTreeStack.h; path = source/CHBinaryTreeStack.h; sourceTree = "<group>"; };
+		5524419512D41A1D00F0AC26 /* CHBinaryTreeStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHBinaryTreeStack.m; path = source/CHBinaryTreeStack.m; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* CHDataStructures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CHDataStructures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E400CAAA0F7919B7003189D3 /* CHCircularBufferQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHCircularBufferQueue.h; path = source/CHCircularBufferQueue.h; sourceTree = "<group>"; };
 		E400CAAB0F7919B7003189D3 /* CHCircularBufferQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHCircularBufferQueue.m; path = source/CHCircularBufferQueue.m; sourceTree = "<group>"; };
@@ -390,6 +394,8 @@
 				E4FE77C90E8978DD00971EE6 /* CHAbstractBinarySearchTree.h */,
 				E41D293D0F6CC44900AF80C4 /* CHAbstractBinarySearchTree_Internal.h */,
 				E4ADBC990E88412C00B570BC /* CHAbstractBinarySearchTree.m */,
+				5524419412D41A1D00F0AC26 /* CHBinaryTreeStack.h */,
+				5524419512D41A1D00F0AC26 /* CHBinaryTreeStack.m */,
 				E48860B80EA66072000F132A /* CHAbstractListCollection.h */,
 				E48860B90EA66072000F132A /* CHAbstractListCollection.m */,
 				E442DFB60E8F1E6D00BD62F6 /* CHAnderssonTree.h */,
@@ -556,6 +562,7 @@
 				E4373E0E111D338200953B7D /* CHCircularBufferDeque.h in Headers */,
 				E45F4CC4111F6025008E8B5D /* CHBinaryHeap.h in Headers */,
 				E4386EF01123A69C00DC6CAC /* CHBidirectionalDictionary.h in Headers */,
+				5524419612D41A1D00F0AC26 /* CHBinaryTreeStack.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,7 +637,14 @@
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "CHDataStructures" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* CHDataStructures */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
@@ -769,6 +783,7 @@
 				E4373E0D111D338100953B7D /* CHCircularBufferDeque.m in Sources */,
 				E45F4CC5111F6025008E8B5D /* CHBinaryHeap.m in Sources */,
 				E4386EF11123A69C00DC6CAC /* CHBidirectionalDictionary.m in Sources */,
+				5524419712D41A1D00F0AC26 /* CHBinaryTreeStack.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
