@@ -30,9 +30,7 @@
 	for (NSArray * array in objects) {
 		deque = [[testClass alloc] init];
 		startTime = timestamp();
-		for (id anObject in array) {
-			[deque prependObject:anObject];
-		}
+		[deque prependObjectsFromArray:array];
 		printf("\t%f", timestamp() - startTime);
 		[deque release];
 	}
@@ -41,9 +39,7 @@
 	for (NSArray * array in objects) {
 		deque = [[testClass alloc] init];
 		startTime = timestamp();
-		for (id anObject in array) {
-			[deque appendObject:anObject];
-		}
+		[deque appendObjectsFromArray:array];
 		printf("\t%f", timestamp() - startTime);
 		[deque release];
 	}
@@ -51,9 +47,7 @@
 	printf("\nremoveFirstObject: ");
 	for (NSArray * array in objects) {
 		deque = [[testClass alloc] init];
-		for (id anObject in array) {
-			[deque appendObject:anObject];
-		}
+		[deque appendObjectsFromArray:array];
 		startTime = timestamp();
 		for (NSUInteger item = 1; item <= [array count]; item++) {
 			[deque removeFirstObject];
@@ -65,9 +59,7 @@
 	printf("\nremoveLastObject:  ");
 	for (NSArray * array in objects) {
 		deque = [[testClass alloc] init];
-		for (id anObject in array) {
-			[deque appendObject:anObject];
-		}
+		[deque appendObjectsFromArray:array];
 		startTime = timestamp();
 		for (NSUInteger item = 1; item <= [array count]; item++) {
 			[deque removeLastObject];
@@ -79,9 +71,7 @@
 	printf("\nremoveAllObjects:  ");
 	for (NSArray * array in objects) {
 		deque = [[testClass alloc] init];
-		for (id anObject in array) {
-			[deque appendObject:anObject];
-		}
+		[deque appendObjectsFromArray:array];
 		startTime = timestamp();
 		[deque removeAllObjects];
 		printf("\t%f", timestamp() - startTime);
@@ -91,9 +81,7 @@
 	printf("\nNSEnumerator       ");
 	for (NSArray * array in objects) {
 		deque = [[testClass alloc] init];
-		for (id anObject in array) {
-			[deque appendObject:anObject];
-		}
+		[deque appendObjectsFromArray:array];
 		startTime = timestamp();
 		NSEnumerator * objectEnumerator = [deque objectEnumerator];
 		while ([objectEnumerator nextObject] != nil)
@@ -105,8 +93,7 @@
 	printf("\nNSFastEnumeration  ");
 	for (NSArray * array in objects) {
 		deque = [[testClass alloc] init];
-		for (id anObject in array)
-			[deque appendObject:anObject];
+		[deque appendObjectsFromArray:array];
 		startTime = timestamp();
 		for (id object in deque)
 			;
