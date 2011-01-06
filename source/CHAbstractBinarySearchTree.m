@@ -527,7 +527,7 @@ CHBinaryTreeNode* CHCreateBinaryTreeNodeWithObject(id anObject) {
 			[current->object release];
 			free(current);
 		}
-		free(stack); // declared in CHBinaryTreeStack * stack macro
+		[stack release];
 	}
 	header->right = sentinel; // With GC, this is sufficient to unroot the tree.
 	sentinel->object = nil; // Make sure we don't accidentally retain an object.
