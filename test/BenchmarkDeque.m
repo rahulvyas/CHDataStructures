@@ -1,17 +1,17 @@
 //
-//  BenchmarkDequeue.m
+//  BenchmarkDeque.m
 //  CHDataStructures
 //
 //  Created by Dave DeLong on 1/5/11.
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import "BenchmarkDequeue.h"
+#import "BenchmarkDeque.h"
 #import "BenchmarkUtils.h"
 #import <CHDataStructures/CHDataStructures.h>
 
 
-@implementation BenchmarkDequeue
+@implementation BenchmarkDeque
 
 - (void) testClass:(Class)testClass {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];

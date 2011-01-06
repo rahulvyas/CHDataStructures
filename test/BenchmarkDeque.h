@@ -1,5 +1,5 @@
 //
-//  BenchmarkDequeue.h
+//  BenchmarkDeque.h
 //  CHDataStructures
 //
 //  Created by Dave DeLong on 1/5/11.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Benchmark.h"
 
-@interface BenchmarkDequeue : NSObject <Benchmark> {
+@interface BenchmarkDeque : NSObject <Benchmark> {
 	NSArray * objects;
 }
 

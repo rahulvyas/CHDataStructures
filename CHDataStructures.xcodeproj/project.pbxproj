@@ -53,8 +53,9 @@
 		5524419712D41A1D00F0AC26 /* CHBinaryTreeStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 5524419512D41A1D00F0AC26 /* CHBinaryTreeStack.m */; };
 		5524436012D4FA5C00F0AC26 /* CHBinaryTreeQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 5524435E12D4FA5C00F0AC26 /* CHBinaryTreeQueue.h */; };
 		5524436112D4FA5C00F0AC26 /* CHBinaryTreeQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 5524435F12D4FA5C00F0AC26 /* CHBinaryTreeQueue.m */; };
-		556D7C7012D579C400C11ACA /* BenchmarkDequeue.m in Sources */ = {isa = PBXBuildFile; fileRef = 556D7C6F12D579C400C11ACA /* BenchmarkDequeue.m */; };
+		556D7C7012D579C400C11ACA /* BenchmarkDeque.m in Sources */ = {isa = PBXBuildFile; fileRef = 556D7C6F12D579C400C11ACA /* BenchmarkDeque.m */; };
 		556D7C7312D57F4200C11ACA /* BenchmarkUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 556D7C7212D57F4200C11ACA /* BenchmarkUtils.m */; };
+		556D7D2D12D5931500C11ACA /* BenchmarkSearchTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 556D7D2C12D5931500C11ACA /* BenchmarkSearchTree.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		E40C4D02108D7A6A00A63A23 /* CHLockableSet.h in Headers */ = {isa = PBXBuildFile; fileRef = E40C4D00108D7A6A00A63A23 /* CHLockableSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E40C4D03108D7A6A00A63A23 /* CHLockableSet.m in Sources */ = {isa = PBXBuildFile; fileRef = E40C4D01108D7A6A00A63A23 /* CHLockableSet.m */; };
@@ -231,10 +232,12 @@
 		5524435E12D4FA5C00F0AC26 /* CHBinaryTreeQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHBinaryTreeQueue.h; path = source/CHBinaryTreeQueue.h; sourceTree = "<group>"; };
 		5524435F12D4FA5C00F0AC26 /* CHBinaryTreeQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHBinaryTreeQueue.m; path = source/CHBinaryTreeQueue.m; sourceTree = "<group>"; };
 		556D7C6112D55EA100C11ACA /* Benchmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Benchmark.h; path = test/Benchmark.h; sourceTree = "<group>"; };
-		556D7C6E12D579C400C11ACA /* BenchmarkDequeue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BenchmarkDequeue.h; path = test/BenchmarkDequeue.h; sourceTree = "<group>"; };
-		556D7C6F12D579C400C11ACA /* BenchmarkDequeue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BenchmarkDequeue.m; path = test/BenchmarkDequeue.m; sourceTree = "<group>"; };
+		556D7C6E12D579C400C11ACA /* BenchmarkDeque.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BenchmarkDeque.h; path = test/BenchmarkDeque.h; sourceTree = "<group>"; };
+		556D7C6F12D579C400C11ACA /* BenchmarkDeque.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BenchmarkDeque.m; path = test/BenchmarkDeque.m; sourceTree = "<group>"; };
 		556D7C7112D57F4200C11ACA /* BenchmarkUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BenchmarkUtils.h; path = test/BenchmarkUtils.h; sourceTree = "<group>"; };
 		556D7C7212D57F4200C11ACA /* BenchmarkUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BenchmarkUtils.m; path = test/BenchmarkUtils.m; sourceTree = "<group>"; };
+		556D7D2B12D5931500C11ACA /* BenchmarkSearchTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BenchmarkSearchTree.h; path = test/BenchmarkSearchTree.h; sourceTree = "<group>"; };
+		556D7D2C12D5931500C11ACA /* BenchmarkSearchTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BenchmarkSearchTree.m; path = test/BenchmarkSearchTree.m; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* CHDataStructures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CHDataStructures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E400CAAA0F7919B7003189D3 /* CHCircularBufferQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHCircularBufferQueue.h; path = source/CHCircularBufferQueue.h; sourceTree = "<group>"; };
 		E400CAAB0F7919B7003189D3 /* CHCircularBufferQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHCircularBufferQueue.m; path = source/CHCircularBufferQueue.m; sourceTree = "<group>"; };
@@ -529,8 +532,10 @@
 				556D7C7112D57F4200C11ACA /* BenchmarkUtils.h */,
 				556D7C7212D57F4200C11ACA /* BenchmarkUtils.m */,
 				556D7C6112D55EA100C11ACA /* Benchmark.h */,
-				556D7C6E12D579C400C11ACA /* BenchmarkDequeue.h */,
-				556D7C6F12D579C400C11ACA /* BenchmarkDequeue.m */,
+				556D7C6E12D579C400C11ACA /* BenchmarkDeque.h */,
+				556D7C6F12D579C400C11ACA /* BenchmarkDeque.m */,
+				556D7D2B12D5931500C11ACA /* BenchmarkSearchTree.h */,
+				556D7D2C12D5931500C11ACA /* BenchmarkSearchTree.m */,
 			);
 			name = Benchmarks;
 			sourceTree = "<group>";
@@ -812,8 +817,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E44B59C70E95852400F9DD1A /* Benchmarks.m in Sources */,
-				556D7C7012D579C400C11ACA /* BenchmarkDequeue.m in Sources */,
+				556D7C7012D579C400C11ACA /* BenchmarkDeque.m in Sources */,
 				556D7C7312D57F4200C11ACA /* BenchmarkUtils.m in Sources */,
+				556D7D2D12D5931500C11ACA /* BenchmarkSearchTree.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
