@@ -18,8 +18,24 @@
 	[self insertObject:anObject atIndex:0];
 }
 
+- (void) prependObjectsFromArray:(NSArray *)anArray {
+	if (anArray == nil)
+		CHNilArgumentException([self class], _cmd);
+	for (id object in anArray) {
+		[self prependObject:object];
+	}
+}
+
 - (void) appendObject:(id)anObject {
 	[self insertObject:anObject atIndex:count];	
+}
+
+- (void) appendObjectsFromArray:(NSArray *)anArray {
+	if (anArray == nil)
+		CHNilArgumentException([self class], _cmd);
+	for (id object in anArray) {
+		[self appendObject:object];
+	}
 }
 
 - (BOOL) isEqual:(id)otherObject {

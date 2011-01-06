@@ -215,6 +215,17 @@
 - (void) appendObject:(id)anObject;
 
 /**
+ Add objects to the back of the deque.
+ 
+ @param anArray The array of objects to add to the back of the deque.
+ 
+ @throw NSInvalidArgumentException if @a anArray is @c nil.
+ 
+ @see appendObject
+ */
+- (void) appendObjectsFromArray:(NSArray *)anArray;
+
+/**
  Exchange the objects in the receiver at given indexes.
  
  @param idx1 The index of the object to replace with the object at @a idx2.
@@ -238,6 +249,17 @@
  @see removeFirstObject
  */
 - (void) prependObject:(id)anObject;
+
+/**
+ Add objects to the front of the deque.
+ 
+ @param anArray The array of objects to add to the front of the deque.
+ 
+ @throw NSInvalidArgumentException if @a anArray is @c nil.
+ 
+ @see prependObject
+ */
+- (void) prependObjectsFromArray:(NSArray *)anArray;
 
 /**
  Empty the receiver of all of its members.

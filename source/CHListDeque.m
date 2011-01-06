@@ -27,10 +27,26 @@
 	[list prependObject:anObject];
 }
 
+- (void) prependObjectsFromArray:(NSArray *)anArray {
+	if (anArray == nil)
+		CHNilArgumentException([self class], _cmd);
+	for (id object in anArray) {
+		[self prependObject:object];
+	}
+}
+
 - (void) appendObject:(id)anObject {
 	if (anObject == nil)
 		CHNilArgumentException([self class], _cmd);
 	[list addObject:anObject];
+}
+
+- (void) appendObjectsFromArray:(NSArray *)anArray {
+	if (anArray == nil)
+		CHNilArgumentException([self class], _cmd);
+	for (id object in anArray) {
+		[self appendObject:object];
+	}
 }
 
 - (id) firstObject {
