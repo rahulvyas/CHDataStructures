@@ -47,6 +47,9 @@ int main (int argc, const char * argv[]) {
 	}
 	free(classes);
 	
+	[benchmarkClasses sortUsingDescriptors:[NSArray arrayWithObject:
+											[[[NSSortDescriptor alloc] initWithKey:@"executionOrder" ascending:YES] autorelease]]];
+	
 	//run each Benchmark
 	for (Class benchmarkClass in benchmarkClasses) {
 		id<Benchmark> benchmark = [[benchmarkClass alloc] init];

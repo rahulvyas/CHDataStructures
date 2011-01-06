@@ -154,6 +154,8 @@
 								 error:NULL];
 		}
 	}
-}	
+}
+
++ (NSUInteger) executionOrder { return 5; }
 
 @end

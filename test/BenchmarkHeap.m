@@ -96,4 +96,6 @@
 	[objects release], objects = nil;
 }
 
++ (NSUInteger) executionOrder { return 4; }
+
 @end

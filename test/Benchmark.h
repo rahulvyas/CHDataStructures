@@ -13,5 +13,6 @@
 
 @required
 - (void) runWithTestObjects:(NSArray *)testObjects;
++ (NSUInteger) executionOrder;
 
 @end
