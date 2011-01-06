@@ -10,3 +10,5 @@
 
 /* Return the current time in seconds, using a double precision number. */
 extern double timestamp();
+
+extern Class* ch_copyClassList(int * classCount);

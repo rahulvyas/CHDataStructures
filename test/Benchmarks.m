@@ -34,11 +34,9 @@ int main (int argc, const char * argv[]) {
 	
 	//find all our Benchmark classes
 	NSMutableArray * benchmarkClasses = [NSMutableArray array];
-	int numClasses = objc_getClassList(NULL, 0);
+	int numClasses = 0;
+	Class * classes = ch_copyClassList(&numClasses);
 	if (numClasses > 0) {
-		Class * classes = malloc(sizeof(Class) * numClasses);
-		numClasses = objc_getClassList(classes, numClasses);
-		
 		Protocol * benchmarkProtocol = objc_getProtocol("Benchmark");
 		for (int i = 0; i < numClasses; ++i) {
 			Class c = classes[i];
@@ -46,8 +44,8 @@ int main (int argc, const char * argv[]) {
 				[benchmarkClasses addObject:c];
 			}
 		}
-		free(classes);
 	}
+	free(classes);
 	
 	//run each Benchmark
 	for (Class benchmarkClass in benchmarkClasses) {
