@@ -11,9 +11,9 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <CHDataStructures/CHDataStructures.h>
-#import <sys/time.h>
 #import <objc/runtime.h>
+
+#import "Benchmark.h"
 
 @interface CHAbstractBinarySearchTree (Height)
 - (NSUInteger) height;
@@ -45,12 +45,7 @@ static NSArray *array;
 static NSMutableArray *objects;
 static double startTime;
 
-/* Return the current time in seconds, using a double precision number. */
-double timestamp() {
-	struct timeval timeOfDay;
-	gettimeofday(&timeOfDay, NULL);
-	return ((double) timeOfDay.tv_sec + (double) timeOfDay.tv_usec * 1e-6);
-}
+
 
 void benchmarkDeque(Class testClass) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -473,6 +468,30 @@ int main (int argc, const char * argv[]) {
 		[temp release];
 	}
 	
+	NSMutableArray * benchmarkClasses = [NSMutableArray array];
+	int numClasses = objc_getClassList(NULL, 0);
+	if (numClasses > 0) {
+		Class * classes = malloc(sizeof(Class) * numClasses);
+		numClasses = objc_getClassList(classes, numClasses);
+		
+		Protocol * benchmarkProtocol = objc_getProtocol("Benchmark");
+		for (int i = 0; i < numClasses; ++i) {
+			Class c = classes[i];
+			if (class_conformsToProtocol(c, benchmarkProtocol)) {
+				[benchmarkClasses addObject:c];
+			}
+		}
+		free(classes);
+	}
+	
+	for (Class benchmarkClass in benchmarkClasses) {
+		id<Benchmark> benchmark = [[benchmarkClass alloc] init];
+		
+		[benchmark runWithTestObjects:objects];
+		
+		[benchmark release];
+	}
+	
 	CHQuietLog(@"\n<CHDeque> Implemenations");
 	benchmarkDeque([CHCircularBufferDeque class]);
 	benchmarkDeque([CHListDeque class]);
@@ -504,16 +523,14 @@ int main (int argc, const char * argv[]) {
 							[CHUnbalancedTree class],
 							nil];
 	NSMutableDictionary *treeResults = [NSMutableDictionary dictionary];
-	NSMutableDictionary *dictionary;
-	Class aClass;
-	NSEnumerator *classEnumerator = [testClasses objectEnumerator];
-	while (aClass = [classEnumerator nextObject]) {
-		dictionary = [NSMutableDictionary dictionary];
+	for (Class aClass in testClasses) {
+		NSMutableDictionary * dictionary = [NSMutableDictionary dictionary];
 		[dictionary setObject:[NSMutableArray array] forKey:@"addObject"];
 		[dictionary setObject:[NSMutableArray array] forKey:@"member"];
 		[dictionary setObject:[NSMutableArray array] forKey:@"removeObject"];
-		if ([aClass conformsToProtocol:@protocol(CHSearchTree)])
+		if ([aClass conformsToProtocol:@protocol(CHSearchTree)]) {
 			[dictionary setObject:[NSMutableArray array] forKey:@"height"];
+		}
 		[treeResults setObject:dictionary forKey:NSStringFromClass(aClass)];
 	}
 	
@@ -535,12 +552,11 @@ int main (int argc, const char * argv[]) {
 			// Create a set of N unique random numbers
 			NSArray *randomNumbers = randomNumberArray(size);
 			jitterOffset = -([testClasses count]/2);
-			classEnumerator = [testClasses objectEnumerator];
-			while (aClass = [classEnumerator nextObject]) {
+			for (Class aClass in testClasses) {
 				NSAutoreleasePool *pool2 = [[NSAutoreleasePool alloc] init];
 				printf(" %s", class_getName(aClass));
 				tree = [[aClass alloc] init];
-				dictionary = [treeResults objectForKey:NSStringFromClass(aClass)];
+				NSDictionary * dictionary = [treeResults objectForKey:NSStringFromClass(aClass)];
 				jitteredSize = size + ((size / 10) * jitterOffset++);
 				
 				// addObject:
@@ -549,9 +565,7 @@ int main (int argc, const char * argv[]) {
 				for (id anObject in randomNumbers)
 					[tree addObject:anObject];
 				duration = timestamp() - startTime;
-				[[dictionary objectForKey:@"addObject"] addObject:
-				 [NSString stringWithFormat:@"%lu,%f",
-				  jitteredSize, duration/size*scale]];
+				[[dictionary objectForKey:@"addObject"] addObject:[NSString stringWithFormat:@"%lu,%f", jitteredSize, duration/size*scale]];
 				
 				// containsObject:
 				nanosleep(&sleepDelay, &sleepRemain);
@@ -563,15 +577,11 @@ int main (int argc, const char * argv[]) {
 					[tree containsObject:anObject];
 				}
 				duration = timestamp() - startTime;
-				[[dictionary objectForKey:@"member"] addObject:
-				 [NSString stringWithFormat:@"%lu,%f",
-				  jitteredSize, duration/size*scale]];
+				[[dictionary objectForKey:@"member"] addObject:[NSString stringWithFormat:@"%lu,%f", jitteredSize, duration/size*scale]];
 				
 				// Maximum height
 				if ([aClass conformsToProtocol:@protocol(CHSearchTree)])
-					[[dictionary objectForKey:@"height"] addObject:
-					 [NSString stringWithFormat:@"%lu,%lu",
-					  jitteredSize, [tree height]]];
+					[[dictionary objectForKey:@"height"] addObject:[NSString stringWithFormat:@"%lu,%lu", jitteredSize, [tree height]]];
 				
 				// removeObject:
 				nanosleep(&sleepDelay, &sleepRemain);
@@ -579,8 +589,7 @@ int main (int argc, const char * argv[]) {
 				for (id anObject in randomNumbers)
 					[tree removeObject:anObject];
 				duration = timestamp() - startTime;
-				[[dictionary objectForKey:@"removeObject"] addObject:
-				 [NSString stringWithFormat:@"%lu,%f", jitteredSize, duration/size*scale]];
+				[[dictionary objectForKey:@"removeObject"] addObject:[NSString stringWithFormat:@"%lu,%f", jitteredSize, duration/size*scale]];
 				
 				[tree release];
 				[pool2 drain];
@@ -596,21 +605,17 @@ int main (int argc, const char * argv[]) {
 								attributes:nil
 									 error:NULL];
 	}
-	NSArray *results;
-	NSEnumerator *classNames = [[treeResults allKeys] objectEnumerator], *operations;
-	NSString *className, *operation;
-	while (className = [classNames nextObject]) {
+
+	for (NSString * className in treeResults) {
 		NSDictionary *resultSet = [treeResults objectForKey:className];
-		operations = [[resultSet allKeys] objectEnumerator];
-		while (operation = [operations nextObject]) {
-			results = [[resultSet objectForKey:operation]
-					   sortedArrayUsingSelector:@selector(compare:)];
-			[[results componentsJoinedByString:@"\n"]
-			 writeToFile:[path stringByAppendingFormat:@"%@-%@.txt",
-						  className, operation]
-			 atomically:NO
-			 encoding:NSUTF8StringEncoding
-			 error:NULL];
+		for (NSString * operation in resultSet) {
+			NSArray *results = [resultSet objectForKey:operation];
+			results = [results sortedArrayUsingSelector:@selector(compare:)];
+			NSString * resultsString = [results componentsJoinedByString:@"\n"];
+			[resultsString writeToFile:[path stringByAppendingFormat:@"%@-%@.txt", className, operation]
+							atomically:NO
+							  encoding:NSUTF8StringEncoding
+								 error:NULL];
 		}
 	}
 	
